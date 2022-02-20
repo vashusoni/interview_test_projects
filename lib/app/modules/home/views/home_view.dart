@@ -16,11 +16,13 @@ class HomeView extends GetView<HomeController> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        elevation: 10,
+        backgroundColor: Colors.white,
         title: StreamBuilder(
           stream: controller.streamController.stream,
           builder: (context, snapshot) {
             if (!snapshot.hasData) {
-              return Text('Save User with Like Button');
+              return Text('Save User with Like Button',style: TextStyle(color: Colors.black),);
             } else if (snapshot.connectionState == ConnectionState.done) {
               return SizedBox(
                 height: 20,
@@ -30,7 +32,7 @@ class HomeView extends GetView<HomeController> {
                 ),
               );
             }
-            return TitleTextWidget(snapshot.data!.toString());
+            return TitleTextWidget(snapshot.data!.toString(),);
           },
         ),
         centerTitle: true,
