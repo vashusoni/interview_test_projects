@@ -3,14 +3,13 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:interview_test_projects/app/modules/home/views/home_view.dart';
+import 'package:interview_test_projects/app/routes/app_pages.dart';
 
 import 'app/modules/home/controllers/home_controller.dart';
 
 void main() {
-
   runApp(const MyApp());
   Get.put(HomeController());
-
 }
 
 class MyApp extends StatelessWidget {
@@ -20,13 +19,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
-
         primarySwatch: Colors.blue,
       ),
-      home:  HomeView(),
+      home: HomeView(),
     );
   }
 }
-

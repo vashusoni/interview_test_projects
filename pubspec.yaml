@@ -18,6 +18,8 @@ dependencies:
   get_cli: ^1.7.1
   dio: ^4.0.4
   shared_preferences: ^2.0.13
+  stream: ^3.0.3
+
 
 
 

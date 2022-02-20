@@ -4,8 +4,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:interview_test_projects/app/modules/home/widgets/details_text_widget.dart';
+import 'package:interview_test_projects/app/modules/home/widgets/title_text_widget.dart';
 import 'package:interview_test_projects/app/repo/dio_client.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../model/user_model.dart';
 import '../controllers/home_controller.dart';
@@ -15,7 +16,23 @@ class HomeView extends GetView<HomeController> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(controller.nameUser.toString()),
+        title: StreamBuilder(
+          stream: controller.streamController.stream,
+          builder: (context, snapshot) {
+            if (!snapshot.hasData) {
+              return Text('Save User with Like Button');
+            } else if (snapshot.connectionState == ConnectionState.done) {
+              return SizedBox(
+                height: 20,
+                width: 20,
+                child: Center(
+                  child: CircularProgressIndicator(),
+                ),
+              );
+            }
+            return TitleTextWidget(snapshot.data!.toString());
+          },
+        ),
         centerTitle: true,
       ),
       body: Center(
@@ -24,73 +41,73 @@ class HomeView extends GetView<HomeController> {
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 return ListView.builder(
+                    physics:  BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
                     itemCount: snapshot.data!.length,
                     itemBuilder: (context, index) {
                       return Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: SizedBox(
-                          height: 100,
-                          child: Card(
-                              elevation: 10,
-                              child: Column(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
-                                children: [
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        snapshot.data![index].name.toString(),
-                                        style: TextStyle(
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.w700),
-                                      ),
-                                      IconButton(
-                                          onPressed: () async {
-                                            SharedPreferences prefs =
-                                                await SharedPreferences
-                                                    .getInstance();
-                                            prefs.setString(
-                                                'name',
-                                                snapshot.data![index].name
-                                                    .toString());
-                                          },
-                                          icon: Icon(CupertinoIcons.heart),
-                                          iconSize: 15)
-                                    ],
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Row(
+                        child: Card(
+                          elevation: 10,
+                          child: Padding(
+                            padding: const EdgeInsets.all(20.0),
+                            child: Column(
+                              children: [
+                                Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        TitleTextWidget(
+                                          snapshot.data![index].name.toString(),
+                                        ),
+                                        SizedBox(
+                                          width: 20,
+                                        ),
+                                        IconButton(
+                                            onPressed: () async {
+                                              var username = snapshot
+                                                  .data![index].name
+                                                  .toString();
+                                              controller.setUserData(username);
+                                              controller.addUser();
+                                            },
+                                            icon: Icon(
+                                              CupertinoIcons.heart,
+                                              color: Colors.red,
+                                            ),
+                                            iconSize: 18)
+                                      ],
+                                    ),
+                                    SizedBox(
+                                      height: 20,
+                                    ),
+                                    Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
                                       children: [
-                                        Text(
-                                          snapshot.data![index].email
-                                              .toString(),
-                                          style: TextStyle(
-                                            fontSize: 15,
-                                          ),
-                                        ),
-                                        Text(
-                                          snapshot.data![index].phone
-                                              .toString(),
-                                          style: TextStyle(
-                                            fontSize: 15,
-                                          ),
-                                        ),
+                                        DetailsTextWidget(snapshot
+                                            .data![index].email
+                                            .toString()),
+                                        DetailsTextWidget(snapshot
+                                            .data![index].phone
+                                            .toString()),
                                       ],
                                     ),
-                                  ),
-                                ],
-                              )),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
                         ),
                       );
                     });
               }
               return Center(
-                child: CircularProgressIndicator(),
-              );
+                  child: CircularProgressIndicator(
+                strokeWidth: 2,
+              ));
             }),
       ),
     );
