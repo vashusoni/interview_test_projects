@@ -5,6 +5,7 @@ import '../model/user_model.dart';
 
 class DioClient {
   final Dio _dio = Dio();
+/// This is used to collect data from users in a list format....!**/
 
   String url = 'https://jsonplaceholder.typicode.com';
   String endPoint = '/users';

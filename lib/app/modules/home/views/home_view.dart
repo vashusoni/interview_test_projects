@@ -26,7 +26,7 @@ class HomeView extends GetView<HomeController> {
                 height: 20,
                 width: 20,
                 child: Center(
-                  child: CircularProgressIndicator(),
+                  child: CircularProgressIndicator(strokeWidth: 2,),
                 ),
               );
             }
@@ -71,7 +71,7 @@ class HomeView extends GetView<HomeController> {
                                                   .data![index].name
                                                   .toString();
                                               controller.setUserData(username);
-                                              controller.addUser();
+                                              controller.addSelectedUser();
                                             },
                                             icon: Icon(
                                               CupertinoIcons.heart,
